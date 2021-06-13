@@ -39,7 +39,7 @@ class VxlConan(ConanFile):
         "gui": False,
     }
 
-    exports_sources = "CMakeLists.txt", "patches/**"
+    exports_sources = "CMakeLists.txt"
     generators = "cmake", "cmake_find_package"
     _cmake = None
 
@@ -84,10 +84,6 @@ class VxlConan(ConanFile):
         tools.get(**self.conan_data["sources"][self.version],
                   destination=self._source_subfolder, strip_root=True)
 
-    def _patch_sources(self):
-        for patch in self.conan_data.get("patches", {}).get(self.version, []):
-            tools.patch(**patch)
-
     def _configure_cmake(self):
         if self._cmake:
             return self._cmake
@@ -123,7 +119,6 @@ class VxlConan(ConanFile):
         return self._cmake
 
     def build(self):
-        self._patch_sources()
         cmake = self._configure_cmake()
         cmake.build()
 
